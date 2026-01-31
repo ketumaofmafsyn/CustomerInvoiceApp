@@ -1,0 +1,105 @@
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-white py-3">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+      <h3 class="mb-0 fw-bold text-success">
+        <i class="fa fa-file-invoice-dollar me-2"></i>Invoices
+      </h3>
+      
+      <div class="d-flex flex-wrap gap-2 w-100 w-md-auto">
+        <select class="form-select" style="max-width: 200px;" [(ngModel)]="selectedStatus" (change)="onStatusChange()">
+          <option [ngValue]="null">All Statuses</option>
+          <option [ngValue]="InvoiceStatus.Draft">Draft</option>
+          <option [ngValue]="InvoiceStatus.Sent">Sent</option>
+          <option [ngValue]="InvoiceStatus.Paid">Paid</option>
+          <option [ngValue]="InvoiceStatus.Overdue">Overdue</option>
+        </select>
+        
+        <div class="input-group" style="max-width: 300px;">
+          <input type="text" class="form-control" placeholder="Search invoices..." [(ngModel)]="searchTerm" (keyup.enter)="onSearch(searchTerm)">
+          <button class="btn btn-outline-secondary" (click)="clearSearch()" [disabled]="!searchTerm">
+            <i class="fa fa-times"></i>
+          </button>
+          <button class="btn btn-outline-primary" (click)="onSearch(searchTerm)">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+        
+        <button *abpPermission="permissions.hasCreate" class="btn btn-success" (click)="openCreateModal()">
+          <i class="fa fa-plus me-1"></i>New Invoice
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body p-0">
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-5">
+      <div class="spinner-border text-success" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && (!invoices.items || invoices.items.length === 0)" class="text-center py-5">
+      <i class="fa fa-file-invoice fa-3x text-muted mb-3 d-block"></i>
+      <p class="text-muted mb-3">{{ searchTerm ? 'No invoices match your search' : 'No invoices found' }}</p>
+      <button *abpPermission="permissions.hasCreate" class="btn btn-success" (click)="openCreateModal()">
+        <i class="fa fa-plus me-1"></i>Create First Invoice
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div *ngIf="!isLoading && invoices.items?.length" class="table-responsive">
+      <table class="table table-hover table-striped mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="px-4 py-3 fw-bold">Invoice #</th>
+            <th class="px-4 py-3 fw-bold">Customer</th>
+            <th class="px-4 py-3 fw-bold">Issue Date</th>
+            <th class="px-4 py-3 fw-bold">Due Date</th>
+            <th class="px-4 py-3 fw-bold">Status</th>
+            <th class="px-4 py-3 fw-bold text-end">Total</th>
+            <th class="px-4 py-3 fw-bold text-center" style="min-width: 140px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let inv of invoices.items" class="align-middle">
+            <td class="px-4 py-3 fw-bold">{{ inv.number }}</td>
+            <td class="px-4 py-3">{{ getCustomerName(inv.customerId) }}</td>
+            <td class="px-4 py-3">{{ inv.issueDate | date:'mediumDate' }}</td>
+            <td class="px-4 py-3">{{ inv.dueDate | date:'mediumDate' }}</td>
+            <td class="px-4 py-3">
+              <span [class]="getStatusBadge(inv.status) + ' px-2 py-1 rounded'">{{ getStatusText(inv.status) }}</span>
+            </td>
+            <td class="px-4 py-3 text-end fw-bold">${{ inv.totalAmount | number:'1.2-2' }}</td>
+            <td class="px-4 py-3 text-center">
+              <div class="d-flex justify-content-center gap-1">
+                <button class="btn btn-sm btn-outline-info" [routerLink]="['/invoice-management/detail', inv.id]">
+                  <i class="fa fa-eye"></i>
+                </button>
+                <button *abpPermission="permissions.hasEdit" class="btn btn-sm btn-outline-warning" (click)="openEditModal(inv)">
+                  <i class="fa fa-edit"></i>
+                </button>
+                <button *abpPermission="permissions.hasDelete" class="btn btn-sm btn-outline-danger" (click)="deleteInvoice(inv.id, inv.number)">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination / Count -->
+    <div *ngIf="invoices.totalCount > pageSize" class="card-footer bg-white border-top py-3 text-center">
+      <small class="text-muted">Showing {{ invoices.items?.length }} of {{ invoices.totalCount }} invoices</small>
+    </div>
+  </div>
+
+  <!-- Invoice Modal -->
+  <app-invoice-modal 
+    *ngIf="isInvoiceModalOpen"
+    [invoice]="editingInvoice"
+    (saved)="onInvoiceSaved($event)">
+  </app-invoice-modal>
+</div>

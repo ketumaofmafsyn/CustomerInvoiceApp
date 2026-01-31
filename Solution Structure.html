@@ -1,0 +1,156 @@
+
+#✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ 📁 BACKEND SOLUTION STRUCTURE (aspnet-core/) ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅
+
+aspnet-core/
+├── src/
+│   ├── CustomerInvoiceApp.Domain.Shared/          # ✅ SHARED CONSTANTS (Enums, Constants)
+│   │   └── Localization/
+│   │       └── CustomerInvoiceApp/
+│   │           └── en.json
+│   │
+│   ├── CustomerInvoiceApp.Domain/                 # ✅ DOMAIN LAYER (Entities, Repositories)
+│   │   ├── Customers/
+│   │   │   ├── Customer.cs                        # ✅ ENTITY (FullAuditedAggregateRoot)
+│   │   │   ├── CustomerConsts.cs
+│   │   │   └── ICustomerRepository.cs
+│   │   ├── Invoices/
+│   │   │   ├── Invoice.cs                         # ✅ ENTITY
+│   │   │   ├── LineItem.cs                        # ✅ VALUE OBJECT
+│   │   │   ├── InvoiceStatus.cs                   # ✅ ENUM
+│   │   │   ├── IInvoiceRepository.cs
+│   │   │   └── ILineItemRepository.cs
+│   │   ├── Settings/
+│   │   ├── CustomerInvoiceAppDomainModule.cs
+│   │   └── CustomerInvoiceAppDomainMappingProfile.cs
+│   │
+│   ├── CustomerInvoiceApp.Application.Contracts/  # ✅ APPLICATION CONTRACTS (DTOs, Interfaces)
+│   │   ├── Customers/
+│   │   │   ├── CustomerDto.cs
+│   │   │   ├── CreateUpdateCustomerDto.cs
+│   │   │   └── ICustomerAppService.cs             # ✅ INTERFACE
+│   │   ├── Invoices/
+│   │   │   ├── InvoiceDto.cs
+│   │   │   ├── LineItemDto.cs                     # ✅ CRITICAL: decimal LineTotal
+│   │   │   ├── CreateUpdateInvoiceDto.cs
+│   │   │   ├── IInvoiceAppService.cs              # ✅ INTERFACE
+│   │   │   └── InvoiceStatusDto.cs
+│   │   ├── Permissions/
+│   │   │   ├── CustomerInvoiceAppPermissionDefinitionProvider.cs
+│   │   │   └── CustomerInvoiceAppPermissions.cs
+│   │   └── CustomerInvoiceAppApplicationContractsModule.cs
+│   │
+│   ├── CustomerInvoiceApp.Application/            # ✅ APPLICATION LAYER (AppServices, Domain Logic)
+│   │   ├── Customers/
+│   │   │   ├── CustomerAppService.cs              # ✅ FIXED: Manual mapping + MapToDto
+│   │   │   └── CustomerApplicationAutoMapperProfile.cs (DELETED)
+│   │   ├── Invoices/
+│   │   │   ├── InvoiceAppService.cs               # ✅ FIXED: decimal LineTotal assignment
+│   │   │   └── InvoiceApplicationAutoMapperProfile.cs (DELETED)
+│   │   ├── Settings/
+│   │   ├── CustomerInvoiceAppApplicationModule.cs
+│   │   └── CustomerInvoiceAppApplicationAutoMapperProfile.cs (DELETED)
+│   │
+│   ├── CustomerInvoiceApp.EntityFrameworkCore/    # ✅ EF CORE (DbContext, Migrations)
+│   │   ├── EntityFrameworkCore/
+│   │   │   ├── CustomerInvoiceAppDbContext.cs
+│   │   │   ├── CustomerInvoiceAppDbContextModelCreatingExtensions.cs
+│   │   │   └── Repositories/
+│   │   ├── Migrations/
+│   │   │   ├── 20260130123456_Initial.cs
+│   │   │   └── CustomerInvoiceAppDbContextModelSnapshot.cs
+│   │   └── CustomerInvoiceAppEntityFrameworkCoreModule.cs
+│   │
+│   ├── CustomerInvoiceApp.HttpApi/                # ✅ HTTP API (Controllers, Models)
+│   │   ├── Controllers/
+│   │   ├── Models/
+│   │   ├── CustomerInvoiceAppHttpApiModule.cs
+│   │   └── CustomerInvoiceAppHttpApiHostModule.cs
+│   │
+│   ├── CustomerInvoiceApp.HttpApi.Host/           # ✅ HOST PROJECT (Program.cs, Startup)
+│   │   ├── Properties/
+│   │   │   └── launchSettings.json
+│   │   ├── appsettings.json
+│   │   ├── appsettings.Development.json
+│   │   ├── Program.cs                             # ✅ ENTRY POINT
+│   │   └── CustomerInvoiceAppHttpApiHostModule.cs
+│   │
+│   ├── CustomerInvoiceApp.DbMigrator/             # ✅ DATABASE MIGRATOR
+│   │   ├── appsettings.json
+│   │   ├── DbMigratorHostedService.cs
+│   │   └── CustomerInvoiceAppDbMigratorModule.cs
+│   │
+│   └── CustomerInvoiceApp.Web/                    # ✅ (Optional: MVC UI - not used in Angular setup)
+│
+├── test/
+│   ├── CustomerInvoiceApp.Application.Tests/
+│   ├── CustomerInvoiceApp.Domain.Tests/
+│   ├── CustomerInvoiceApp.EntityFrameworkCore.Tests/
+│   └── CustomerInvoiceApp.HttpApi.Client.ConsoleTestApp/
+│
+├── common.props                                   # ✅ SHARED PROJECT PROPERTIES
+├── CustomerInvoiceApp.sln                         # ✅ SOLUTION FILE
+└── Directory.Build.props
+
+
+
+
+
+
+
+# ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅ FRONTEND FILE STRUCTURE (angular/ folder) ✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅
+
+angular/
+├── src/
+│   ├── app/
+│   │   ├── app.config.ts                          # ✅ ABP config + auth guards
+│   │   ├── app.routes.ts                          # ✅ Main routes + lazy loading
+│   │   ├── app.component.ts                       # ✅ Clean layout (no debug box)
+│   │   ├── app.component.html
+│   │   │
+│   │   ├── customer-management/                   # ✅ CUSTOMER MODULE
+│   │   │   ├── customer-management.routes.ts
+│   │   │   ├── components/
+│   │   │   │   ├── customer-list/                 # ✅ Customer list page
+│   │   │   │   │   ├── customer-list.component.ts
+│   │   │   │   │   └── customer-list.component.html
+│   │   │   │   └── customer-modal/                # ✅ Create/Edit form (page, not modal)
+│   │   │   │       ├── customer-modal.component.ts
+│   │   │   │       └── customer-modal.component.html
+│   │   │   └── services/
+│   │   │       └── customer.service.ts            # ✅ ABP proxy service
+│   │   │
+│   │   ├── invoice-management/                    # ✅ INVOICE MODULE
+│   │   │   ├── invoice-management.routes.ts
+│   │   │   ├── components/
+│   │   │   │   ├── invoice-list/
+│   │   │   │   │   ├── invoice-list.component.ts
+│   │   │   │   │   └── invoice-list.component.html
+│   │   │   │   ├── invoice-detail/
+│   │   │   │   │   ├── invoice-detail.component.ts
+│   │   │   │   │   └── invoice-detail.component.html
+│   │   │   │   └── invoice-modal/
+│   │   │   │       ├── invoice-modal.component.ts
+│   │   │   │       └── invoice-modal.component.html
+│   │   │   └── services/
+│   │   │       └── invoice.service.ts             # ✅ ABP proxy service
+│   │   │
+│   │   └── core/                                  # ✅ ABP core files
+│   │       ├── permission/
+│   │       └── proxy/
+│   │           ├── customers/
+│   │           │   ├── customer.service.ts        # ✅ Generated proxy
+│   │           │   └── customer.dto.ts
+│   │           └── invoices/
+│   │               ├── invoice.service.ts         # ✅ Generated proxy
+│   │               └── invoice.dto.ts
+│   │
+│   ├── environments/
+│   │   ├── environment.ts                         # ✅ Backend URL config
+│   │   └── environment.prod.ts
+│   │
+│   ├── index.html
+│   └── styles.scss
+│
+├── package.json                                   # ✅ Dependencies
+├── angular.json
+└── proxy.conf.js                                  # ✅ Backend proxy config

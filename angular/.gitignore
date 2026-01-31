@@ -1,0 +1,21 @@
+# Node / Angular
+node_modules/
+dist/
+.angular/
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.vs
+*.ncrunch*
+*.vscode/
+
+# Environment / secrets
+.env
+appsettings.Development.json
+appsettings.Local.json
+
+# Logs
+*.log

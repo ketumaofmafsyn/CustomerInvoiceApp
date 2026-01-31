@@ -1,0 +1,126 @@
+:host {
+  display: block;
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  
+  &.required::after {
+    content: " *";
+    color: #dc3545;
+    font-weight: bold;
+  }
+}
+
+.form-control, .form-select {
+  border-radius: 0.375rem;
+  border: 1px solid #ced4da;
+  padding: 0.625rem 0.75rem;
+  font-size: 1rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  
+  &:focus {
+    border-color: #4361ee;
+    box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+    outline: none;
+  }
+  
+  &.is-invalid {
+    border-color: #dc3545;
+    
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+  }
+}
+
+.invalid-feedback {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #dc3545;
+  font-weight: 500;
+}
+
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+// Button styling
+.btn {
+  padding: 0.625rem 1.25rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  
+  &.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    
+    &:hover {
+      background-color: #5a6268;
+      border-color: #545b62;
+    }
+  }
+  
+  &.btn-primary {
+    background-color: #4361ee;
+    border-color: #4361ee;
+    
+    &:hover {
+      background-color: #3a56d4;
+      border-color: #354ec9;
+    }
+    
+    &:disabled {
+      background-color: #adb5bd;
+      border-color: #adb5bd;
+      opacity: 0.65;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+  :host {
+    padding: 1rem;
+    max-width: 100%;
+  }
+  
+  .form-label {
+    font-size: 0.95rem;
+  }
+  
+  .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  .d-flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .me-2 {
+    margin-right: 0 !important;
+    margin-bottom: 0.5rem;
+  }
+}

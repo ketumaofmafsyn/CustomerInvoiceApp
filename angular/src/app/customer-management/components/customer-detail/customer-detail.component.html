@@ -1,0 +1,112 @@
+<abp-card *ngIf="customer; else loadingTemplate">
+  <abp-card-header>
+    <div class="d-flex justify-content-between align-items-start w-100">
+      <div>
+        <h2 class="mb-1">{{ customer.name }}</h2>
+        <p class="text-muted mb-0">
+          <i class="fa fa-envelope me-2"></i>{{ customer.email }}
+          <span *ngIf="customer.phone" class="ms-3">
+            <i class="fa fa-phone me-2"></i>{{ customer.phone }}
+          </span>
+        </p>
+      </div>
+      
+      <div class="d-flex gap-2">
+        <button 
+          *abpPermission="permissions.hasEdit" 
+          class="btn btn-warning" 
+          (click)="editCustomer()"
+          [disabled]="isDeleting">
+          <i class="fa fa-edit me-1"></i>{{ '::Edit' | abpLocalization }}
+        </button>
+        
+        <button 
+          *abpPermission="permissions.hasDelete" 
+          class="btn btn-danger" 
+          (click)="deleteCustomer()"
+          [disabled]="isDeleting">
+          <i class="fa fa-trash me-1"></i>{{ '::Delete' | abpLocalization }}
+        </button>
+        
+        <button class="btn btn-outline-secondary" (click)="goBack()">
+          <i class="fa fa-arrow-left me-1"></i>{{ '::Back' | abpLocalization }}
+        </button>
+      </div>
+    </div>
+  </abp-card-header>
+
+  <abp-card-body>
+    <!-- Billing Address Section -->
+    <div class="mb-4 p-3 bg-light rounded">
+      <h5 class="mb-3"><i class="fa fa-map-marker-alt me-2"></i>{{ '::BillingAddress' | abpLocalization }}</h5>
+      <p class="mb-0">{{ customer.billingAddress || ('::NotProvided' | abpLocalization) }}</p>
+    </div>
+
+    <!-- Linked Invoices Section -->
+    <h4 class="mb-3 border-bottom pb-2">
+      <i class="fa fa-file-invoice me-2"></i>{{ '::LinkedInvoices' | abpLocalization }}
+      <span class="badge bg-info ms-2">{{ invoices.totalCount || 0 }}</span>
+    </h4>
+    
+    <div *ngIf="invoices.items?.length; else noInvoices">
+      <abp-table 
+        [data]="invoices.items" 
+        [loading]="isLoading"
+        [scrollable]="true">
+        <ng-template #header>
+          <tr>
+            <th>{{ '::InvoiceNumber' | abpLocalization }}</th>
+            <th>{{ '::IssueDate' | abpLocalization }}</th>
+            <th>{{ '::DueDate' | abpLocalization }}</th>
+            <th>{{ '::Status' | abpLocalization }}</th>
+            <th class="text-end">{{ '::Total' | abpLocalization }}</th>
+            <th class="text-center">{{ '::Actions' | abpLocalization }}</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-invoice>
+          <tr>
+            <td><strong>{{ invoice.number }}</strong></td>
+            <td>{{ invoice.issueDate | date:'mediumDate' }}</td>
+            <td>{{ invoice.dueDate | date:'mediumDate' }}</td>
+            <td>
+              <span [class]="getStatusBadgeClass(invoice.status)">
+                {{ getStatusText(invoice.status) | abpLocalization }}
+              </span>
+            </td>
+            <td class="text-end fw-bold">
+              {{ invoice.totalAmount | currency:'USD':'symbol':'1.2-2' }}
+            </td>
+            <td class="text-center">
+              <button 
+                class="btn btn-sm btn-outline-primary" 
+                (click)="navigateToInvoice(invoice.id)"
+                title="{{ '::ViewDetails' | abpLocalization }}">
+                <i class="fa fa-eye"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </abp-table>
+    </div>
+    
+    <ng-template #noInvoices>
+      <div class="text-center py-5">
+        <i class="fa fa-file-invoice fa-3x text-muted mb-3 d-block"></i>
+        <p class="text-muted">{{ '::NoInvoicesFound' | abpLocalization }}</p>
+        <button 
+          *abpPermission="'CustomerInvoiceApp.InvoiceManagement.Create'" 
+          class="btn btn-primary mt-2"
+          routerLink="/invoice-management/create"
+          [queryParams]="{ customerId: customer.id }">
+          <i class="fa fa-plus me-1"></i>{{ '::CreateInvoice' | abpLocalization }}
+        </button>
+      </div>
+    </ng-template>
+  </abp-card-body>
+</abp-card>
+
+<ng-template #loadingTemplate>
+  <div class="d-flex justify-content-center align-items-center" style="min-height: 400px;">
+    <abp-spinner size="xl"></abp-spinner>
+  </div>
+</ng-template>

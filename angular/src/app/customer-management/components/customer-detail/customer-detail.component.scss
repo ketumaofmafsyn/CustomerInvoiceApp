@@ -1,0 +1,33 @@
+:host {
+  display: block;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.badge {
+  text-transform: capitalize;
+  padding: 0.45em 0.8em;
+  font-weight: 500;
+}
+
+// Responsive invoice table
+@media (max-width: 768px) {
+  abp-table {
+    font-size: 0.9rem;
+    
+    th, td {
+      padding: 0.5rem !important;
+    }
+    
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Status badge enhancements
+.badge.bg-success { border-color: #1f9d55; }
+.badge.bg-warning { border-color: #eaa800; }
+.badge.bg-danger { border-color: #e13c39; }

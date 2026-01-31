@@ -1,0 +1,188 @@
+<form [formGroup]="form" class="mt-3">
+  <!-- Customer & Date Fields -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-6">
+      <label class="form-label required fw-bold">Customer</label>
+      <select 
+        class="form-select form-select-lg" 
+        formControlName="customerId"
+        [class.is-invalid]="form.get('customerId')?.touched && form.get('customerId')?.invalid"
+        [disabled]="loadingCustomers">
+        <option value="">----------</option>
+        <option *ngFor="let customer of customers" [value]="customer.id">
+          {{ customer.name }} <small class="text-muted">({{ customer.email }})</small>
+        </option>
+      </select>
+      <div *ngIf="form.get('customerId')?.invalid && form.get('customerId')?.touched" class="invalid-feedback">
+        Please select a customer
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label required fw-bold">Issue Date</label>
+      <input 
+        type="date" 
+        class="form-control form-control-lg" 
+        formControlName="issueDate"
+        [class.is-invalid]="form.get('issueDate')?.touched && form.get('issueDate')?.invalid">
+      <div *ngIf="form.get('issueDate')?.invalid && form.get('issueDate')?.touched" class="invalid-feedback">
+        Issue date is required
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label required fw-bold">Due Date</label>
+      <input 
+        type="date" 
+        class="form-control form-control-lg" 
+        formControlName="dueDate"
+        [class.is-invalid]="form.get('dueDate')?.touched && form.get('dueDate')?.invalid">
+      <div *ngIf="form.get('dueDate')?.invalid && form.get('dueDate')?.touched" class="invalid-feedback">
+        Due date is required
+      </div>
+    </div>
+  </div>
+
+  <!-- Line Items Section -->
+  <div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+      <h5 class="mb-0 fw-bold text-primary">
+        <i class="fa fa-list me-2"></i>Line Items
+      </h5>
+      <button 
+        type="button" 
+        class="btn btn-outline-primary btn-sm"
+        (click)="addLineItem()"
+        [disabled]="saving">
+        <i class="fa fa-plus me-1"></i>Add Item
+      </button>
+    </div>
+
+    <div formArrayName="lineItems" class="animate__animated animate__fadeIn">
+      <div 
+        *ngFor="let item of lineItems.controls; let i=index" 
+        [formGroupName]="i" 
+        class="mb-3 p-3 border rounded bg-light position-relative">
+        
+        <!-- Remove Button -->
+        <button 
+          *ngIf="lineItems.length > 1"
+          type="button" 
+          class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+          (click)="removeLineItem(i)"
+          [disabled]="saving"
+          title="Remove item">
+          <i class="fa fa-trash"></i>
+        </button>
+
+        <div class="row g-3 align-items-end">
+          <div class="col-md-5">
+            <label class="form-label required">Description</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              formControlName="description"
+              placeholder="Item description"
+              [class.is-invalid]="item.get('description')?.touched && item.get('description')?.invalid">
+            <div *ngIf="item.get('description')?.invalid && item.get('description')?.touched" class="invalid-feedback">
+              Description is required
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label required">Qty</label>
+            <input 
+              type="number" 
+              class="form-control text-center" 
+              formControlName="quantity"
+              min="1"
+              placeholder="1"
+              [class.is-invalid]="item.get('quantity')?.touched && item.get('quantity')?.invalid">
+            <div *ngIf="item.get('quantity')?.invalid && item.get('quantity')?.touched" class="invalid-feedback">
+              Valid quantity required
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label required">Unit Price ($)</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input 
+                type="number" 
+                class="form-control" 
+                formControlName="unitPrice"
+                step="0.01"
+                min="0"
+                placeholder="0.00"
+                [class.is-invalid]="item.get('unitPrice')?.touched && item.get('unitPrice')?.invalid">
+            </div>
+            <div *ngIf="item.get('unitPrice')?.invalid && item.get('unitPrice')?.touched" class="invalid-feedback">
+              Valid price required
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label">Line Total</label>
+            <div class="form-control-plaintext fw-bold text-primary fs-5">
+              ${{ getLineTotal(i) | number:'1.2-2' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="lineItems.length === 0" class="text-center py-4 bg-light rounded">
+      <i class="fa fa-shopping-cart fa-3x text-muted mb-2 d-block"></i>
+      <p class="text-muted mb-0">No line items added. Click "Add Item" to start.</p>
+    </div>
+  </div>
+
+  <!-- Totals Summary Card -->
+  <div class="card border-primary mb-4 animate__animated animate__fadeInUp">
+    <div class="card-header bg-primary text-white fw-bold">
+      <i class="fa fa-calculator me-2"></i>Invoice Summary
+    </div>
+    <div class="card-body">
+      <div class="d-flex justify-content-between py-2 border-bottom">
+        <span class="fw-semibold">Subtotal:</span>
+        <span class="fs-4 fw-bold">${{ subtotal | number:'1.2-2' }}</span>
+      </div>
+      <div class="d-flex justify-content-between py-2 border-bottom">
+        <span class="fw-semibold">Tax ({{ taxRate * 100 }}%):</span>
+        <span class="fs-5 fw-bold text-success">${{ (subtotal * taxRate) | number:'1.2-2' }}</span>
+      </div>
+      <div class="d-flex justify-content-between py-3 border-top border-2">
+        <span class="fw-bold fs-4">GRAND TOTAL:</span>
+        <span class="fw-bold fs-2 text-primary">${{ form.value.totalAmount | number:'1.2-2' }}</span>
+      </div>
+      <div class="alert alert-info mt-3 mb-0">
+        <i class="fa fa-info-circle me-2"></i>
+        <small>Grand total is calculated automatically. Backend will verify amounts on submission.</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+    <button 
+      type="button" 
+      class="btn btn-lg btn-secondary px-4"
+      (click)="cancel()"
+      [disabled]="saving">
+      <i class="fa fa-times me-2"></i>Cancel
+    </button>
+    <button 
+      type="button" 
+      class="btn btn-lg btn-primary px-4"
+      (click)="save()"
+      [disabled]="form.invalid || saving || lineItems.length === 0"
+      [class.btn-success]="!saving"
+      [class.btn-warning]="saving">
+      <i class="fa fa-spinner fa-spin me-2" *ngIf="saving"></i>
+      <i class="fa fa-save me-2" *ngIf="!saving"></i>
+      <span *ngIf="!saving">{{ isEdit ? 'Update Invoice' : 'Create Invoice' }}</span>
+      <span *ngIf="saving">Processing...</span>
+    </button>
+  </div>
+</form>

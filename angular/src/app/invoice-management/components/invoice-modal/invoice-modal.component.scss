@@ -1,0 +1,74 @@
+:host {
+  display: block;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.form-control-plaintext {
+  min-height: 2.5rem;
+  padding: 0.5rem 0;
+  font-size: 1.25rem;
+}
+
+.invalid-feedback {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+// Line item card styling
+.border {
+  border-color: #dee2e6 !important;
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+
+// Button enhancements
+.btn {
+  transition: all 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .row > [class*="col-"] {
+    margin-bottom: 1rem;
+  }
+  
+  .position-absolute {
+    position: relative !important;
+    margin-top: 1rem;
+  }
+  
+  .btn-lg {
+    width: 100%;
+  }
+  
+  .d-flex {
+    flex-direction: column;
+    align-items: stretch;
+    
+    > * {
+      width: 100% !important;
+      margin-bottom: 0.5rem;
+    }
+  }
+  
+  .card-header {
+    font-size: 1.1rem;
+  }
+  
+  .fs-2 {
+    font-size: 1.75rem !important;
+  }
+}

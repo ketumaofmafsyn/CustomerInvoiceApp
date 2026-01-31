@@ -1,0 +1,35 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CustomerInvoiceApp.Application.Contracts/CustomerInvoiceApp.Application.Contracts.csproj" />
+    <Project Path="src/CustomerInvoiceApp.Application/CustomerInvoiceApp.Application.csproj" />
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <Project Path="src/CustomerInvoiceApp.DbMigrator/CustomerInvoiceApp.DbMigrator.csproj" />
+    <Project Path="src/CustomerInvoiceApp.Domain.Shared/CustomerInvoiceApp.Domain.Shared.csproj" />
+    <Project Path="src/CustomerInvoiceApp.Domain/CustomerInvoiceApp.Domain.csproj" />
+    <Project Path="src/CustomerInvoiceApp.EntityFrameworkCore/CustomerInvoiceApp.EntityFrameworkCore.csproj" />
+    <Project Path="src/CustomerInvoiceApp.HttpApi.Client/CustomerInvoiceApp.HttpApi.Client.csproj" />
+    
+    <Project Path="src/CustomerInvoiceApp.HttpApi.Host/CustomerInvoiceApp.HttpApi.Host.csproj" />
+    <Project Path="src/CustomerInvoiceApp.HttpApi/CustomerInvoiceApp.HttpApi.csproj" />
+    
+    
+    
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/CustomerInvoiceApp.Application.Tests/CustomerInvoiceApp.Application.Tests.csproj" />
+    <Project Path="test/CustomerInvoiceApp.Domain.Tests/CustomerInvoiceApp.Domain.Tests.csproj" />
+    <Project Path="test/CustomerInvoiceApp.EntityFrameworkCore.Tests/CustomerInvoiceApp.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="test/CustomerInvoiceApp.HttpApi.Client.ConsoleTestApp/CustomerInvoiceApp.HttpApi.Client.ConsoleTestApp.csproj" />
+    
+    <Project Path="test/CustomerInvoiceApp.TestBase/CustomerInvoiceApp.TestBase.csproj" />
+    
+  </Folder>
+</Solution>
